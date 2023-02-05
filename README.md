@@ -1,7 +1,7 @@
 # tiling
-An infinite jigsaw puzzle with the set of 11 aperiodic Wang tiles defined by Jeandel and Rao in Figure 4 of [https://arxiv.org/abs/1506.06492].
+An infinite jigsaw puzzle with the set of 11 aperiodic Wang tiles defined by Jeandel and Rao in Figure 4 of https://arxiv.org/abs/1506.06492.
 
-The conversion of the tiles to jigsaw pieces is identical to the description by Labbé in [https://arxiv.org/abs/1808.07768].
+The conversion of the tiles to jigsaw pieces is identical to the description by Labbé in https://arxiv.org/abs/1808.07768.
 
 ## Building from source
 
