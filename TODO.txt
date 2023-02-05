@@ -1,0 +1,5 @@
+colorful tiling
+switch between visual modes color/labels/jigsaw
+import/export
+dynamic tile images from labels
+biggest square counter
