@@ -1,6 +1,6 @@
 <script>
     import PieceTemplate from './PieceTemplate.svelte'
-    import {grid, pieces, resetAll} from './data.js'
+    import {grid, pieces, resetAll, maximalsquare, bestsquare} from './data.js'
 
     let showreset = false;
     function settings() {
@@ -29,13 +29,8 @@
         -moz-user-drag: none;
         -o-user-drag: none;
     }
-    .toolcontainer {
+    .toolbar {
         float: bottom;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
         width: 100%;
         user-select: none;
         background-color: #C7B198;
@@ -43,6 +38,14 @@
         border-width: 4px;
         border-style:ridge;
 		border-color: #DFD3C3;
+        color:black;
+    }
+    .toolcontainer {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
     }
     .tool {
         padding-left:10px;
@@ -99,8 +102,25 @@
     .show {
         visibility: visible;
     }
+    .hiscore {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 50%;
+        min-width: max-content;
+        left: 50%;
+        transform: translate(-50%,0);
+        justify-content: space-evenly;
+    }
+    .hiscore .score {
+        width: 50%;
+        inline-size: max-content;
+        padding: 0px 20px;
+    }
 </style>
 
+<div class="toolbar" draggable="false">
 <div class="toolcontainer nodrag" draggable="false">
     <PieceTemplate type=0/>
     <PieceTemplate type=1/>
@@ -116,6 +136,11 @@
     <div class="tool">
         <button id="settings" class="button" on:click={settings}>Reset</button>
     </div>
+</div>
+<div class="hiscore">
+    <div class="score">Maximal square: {$maximalsquare}x{$maximalsquare}</div>
+    <div class="score">Best: {$bestsquare}x{$bestsquare}</div>
+</div>
 </div>
 <div class="resetdialog{showreset ? " show" : ""}">
     <div class="text">

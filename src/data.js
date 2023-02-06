@@ -26,6 +26,15 @@ grid.subscribe((value) => localStorage.grid = JSON.stringify(value));
 export const pieces = writable(JSON.parse(localStorage.getItem('pieces')) || []);
 pieces.subscribe((value) => localStorage.pieces = JSON.stringify(value));
 
+export const bestsquare = writable(JSON.parse(localStorage.getItem('bestsquare')) || 0);
+bestsquare.subscribe((value) => localStorage.bestsquare = JSON.stringify(value));
+export const maximalsquare = writable(0);
+//export const maximalsquare = writable(JSON.parse(localStorage.getItem('maximalsquare')) || 0);
+//maximalsquare.subscribe((value) => localStorage.maximalsquare = JSON.stringify(value));
+export const msqgrid = writable({});
+//export const msqgrid = writable(JSON.parse(localStorage.getItem('msqgrid')) || {});
+//msqgrid.subscribe((value) => localStorage.msqgrid = JSON.stringify(value));
+
 export const camerax = writable(JSON.parse(localStorage.getItem('camerax')) || 0);
 export const cameray = writable(JSON.parse(localStorage.getItem('cameray')) || 0);
 camerax.subscribe((value) => localStorage.camerax = JSON.stringify(value));
@@ -70,4 +79,6 @@ export function resetAll() {
     grid.set({});
     pieces.set([]);
     nextid.set(0);
+    msqgrid.set({});
+    maximalsquare.set(0);
 }

@@ -2,7 +2,7 @@
     import { writable } from 'svelte/store';
     import Piece from './Piece.svelte'
     import Toolbar from './Toolbar.svelte'
-    import {camerax, cameray,canvasheight, pieces,maxsq,zoomfactor,activezoom} from './data.js'
+    import {camerax, cameray,canvasheight, pieces,maxsq,zoomfactor,activezoom,maximalsquare,bestsquare} from './data.js'
     import { onMount, onDestroy } from "svelte";
 
     let x;
@@ -16,21 +16,7 @@
 
     $: sqsize = maxsq*$zoomfactor;
 
-    function lexcompare(p1,p2) {
-        const dx = p1.gx-p2.gx;
-        const dy = p1.gy-p2.gy;
-        if (dx<0) return -1;
-        if (dx>0) return 1;
-        if (dy<0) return -1;
-        if (dy>0) return 1;
-        return 0;
-    }
-
-    //pieces.subscribe(compute_maximal_square);
-    function compute_maximal_square(val) {
-        // TODO
-    }
-
+    
 	function handleMousedown(event) {
 		x = event.clientX;
         y = event.clientY;

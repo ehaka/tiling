@@ -1,7 +1,8 @@
 <script>
     import { spring } from 'svelte/motion';
     import { derived } from 'svelte/store';
-    import {camerax,cameray,canvasheight, grid, pieces, sidelabels, tile_presentation, tilesrc,mintext,activezoom,zoomfactor,maxsq} from './data.js'
+    import {camerax,cameray,canvasheight, grid, pieces, sidelabels, tile_presentation, tilesrc,mintext,activezoom,zoomfactor,maxsq, maximalsquare, bestsquare, msqgrid} from './data.js'
+    import {} from './Grid.svelte'
     import { onMount } from "svelte";
 
     export let pid;
@@ -20,9 +21,11 @@
 	let lastfree = [gridx,gridy];
 	let lastvalid = [gridx,gridy];
 	let prevpos = [gridx,gridy];
-
-
     let inmotion = false;
+    
+    const MSQ_NOCHANGE = 0;
+    const MSQ_NEWMAX = 1;
+    const MSQ_NEWBEST = 2;
 
     // geometric image is aligned to bottom left
     $: draw_w = sqsize*68/60;
@@ -42,7 +45,72 @@
     $: snap_dy = snapy-$coords.y;
 
 
-    onMount(() => updatePos(0));
+    onMount(initialize);
+
+    function initialize() {
+        updatePos(1);
+        updateMaxSquareCounts(gx,gy);
+    }
+
+    function updateMaxSquareCounts(mx,my) {
+        // update sizes of maximal squares propagating up and left from (mx,my)
+        let cy = my;
+        let maxblock = 0;
+        let prevmax = 0;
+
+        // @ts-ignore
+        while (cy == my || [mx,cy] in $grid) {
+            let cx = mx;
+            // @ts-ignore
+            if (cy == my && !([mx,my] in $grid)) {
+                // [mx,my] is already deleted from $msqgrid, only propagate changes
+                cx = mx-1;
+            }
+
+            // @ts-ignore
+            while ([cx,cy] in $grid) {
+                // @ts-ignore
+                let d = $msqgrid[[cx,cy+1]] || 0;
+                // @ts-ignore
+                let dr = $msqgrid[[cx+1,cy+1]] || 0;
+                // @ts-ignore
+                let r = $msqgrid[[cx+1,cy]] || 0;
+
+                let blocksize = 1+Math.min(d,dr,r);
+                // @ts-ignore
+                let prev = $msqgrid[[cx,cy]];
+                if (prev>prevmax) prevmax = prev;
+                // @ts-ignore
+                $msqgrid[[cx,cy]] = blocksize;
+                if (blocksize>maxblock) maxblock = blocksize;
+                cx--;
+            }
+            cy--;
+        }
+
+        if (prevmax>maxblock) {
+            // potentially eliminated the maximal square
+            let globalmax = 0;
+            for (let prop in $msqgrid) {
+                let s = $msqgrid[prop];
+                if (s>globalmax) globalmax=s;
+            }
+            $maximalsquare = globalmax;
+            return MSQ_NOCHANGE;
+        }
+
+        if (maxblock>$bestsquare) {
+            $bestsquare = maxblock;
+            $maximalsquare = maxblock;
+            return MSQ_NEWBEST;
+        }
+
+        if (maxblock>$maximalsquare) {
+            $maximalsquare = maxblock;
+            return MSQ_NEWMAX;
+        } 
+
+    }
 
     zoomfactor.subscribe(updatePos);
     function updatePos(value) {
@@ -68,19 +136,24 @@
 	}
 
     function handleMousedown(event) {
-		coords.stiffness = coords.damping = 1;
 		x = event.clientX;
 		y = event.clientY;
 
 		window.addEventListener('mousemove', handleMousemove);
 		window.addEventListener('mouseup', handleMouseup);
+        
+        startMove();
+	}
+    function startMove() {
+		coords.stiffness = coords.damping = 1;
         inmotion = true;
-
         // @ts-ignore
         delete $grid[[gx,gy]];
-        lastvalid = [gx,gy];
-        lastfree = [gx,gy];
-	}
+        // @ts-ignore
+        delete $msqgrid[[gx,gy]];
+        updateMaxSquareCounts(gx,gy);
+        lastvalid = lastfree = [gx,gy];
+    }
     function handleTouchstart(event) {
         const touches = event.touches;
         if ($activezoom) return;
@@ -89,16 +162,12 @@
         const touch = touches[0];
 		x = touch.clientX;
 		y = touch.clientY;
-		coords.stiffness = coords.damping = 1;
-        inmotion = true;
 
 		window.addEventListener('touchmove', handleTouchmove);
 		window.addEventListener('touchcancel', handleTouchend);
 		window.addEventListener('touchend', handleTouchend);
 
-        // @ts-ignore
-        delete $grid[[gx,gy]];
-        lastvalid = lastfree = [gx,gy];
+        startMove();
 	}
 	function handleMousemove(event) {
         move(event.clientX, event.clientY);
@@ -214,12 +283,14 @@
             $pieces.pop();
             $pieces = $pieces;
             $grid = $grid;
+            $msqgrid = $msqgrid;
             return;
         }
 
         gotoGridPos(lastvalid[0],lastvalid[1],true);
         // @ts-ignore
         $grid[lastvalid] = type;
+        updateMaxSquareCounts(lastvalid[0],lastvalid[1]);
         update_piece_index();
         $pieces[piece_index] = {id:pid, type:type, gx:lastvalid[0], gy:lastvalid[1]};
 	}
