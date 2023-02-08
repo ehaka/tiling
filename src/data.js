@@ -21,9 +21,9 @@ export const canvasheight = writable(0);
 export const activezoom = writable(false);
 export const nextid = writable(JSON.parse(localStorage.getItem('nextid')) || 0);
 nextid.subscribe((value) => localStorage.nextid = JSON.stringify(value));
-export const grid = writable({});
-//export const grid = writable(JSON.parse(localStorage.getItem('grid')) || {});
-//grid.subscribe((value) => localStorage.grid = JSON.stringify(value));
+//export const grid = writable({});
+export const grid = writable(JSON.parse(localStorage.getItem('grid')) || {});
+grid.subscribe((value) => localStorage.grid = JSON.stringify(value));
 export const pieces = writable(JSON.parse(localStorage.getItem('pieces')) || []);
 pieces.subscribe((value) => localStorage.pieces = JSON.stringify(value));
 
@@ -32,9 +32,9 @@ bestsquare.subscribe((value) => localStorage.bestsquare = JSON.stringify(value))
 export const maximalsquare = writable(0);
 //export const maximalsquare = writable(JSON.parse(localStorage.getItem('maximalsquare')) || 0);
 //maximalsquare.subscribe((value) => localStorage.maximalsquare = JSON.stringify(value));
-export const msqgrid = writable({});
-//export const msqgrid = writable(JSON.parse(localStorage.getItem('msqgrid')) || {});
-//msqgrid.subscribe((value) => localStorage.msqgrid = JSON.stringify(value));
+//export const msqgrid = writable({});
+export const msqgrid = writable(JSON.parse(localStorage.getItem('msqgrid')) || {});
+msqgrid.subscribe((value) => localStorage.msqgrid = JSON.stringify(value));
 
 export const camerax = writable(JSON.parse(localStorage.getItem('camerax')) || 0);
 export const cameray = writable(JSON.parse(localStorage.getItem('cameray')) || 0);

@@ -51,14 +51,14 @@
         updatePos(1);
         // @ts-ignore
         $grid[[gx,gy]] = type;
-        updateMaxSquareCounts(gx,gy);
+        updateMaxSquareCounts(gx,gy,0);
     }
 
-    function updateMaxSquareCounts(mx,my) {
+    function updateMaxSquareCounts(mx,my,prev) {
         // update sizes of maximal squares propagating up and left from (mx,my)
         let cy = my;
         let maxblock = 0;
-        let prevmax = 0;
+        let prevmax = prev;
 
         // @ts-ignore
         while (cy == my || [mx,cy] in $grid) {
@@ -152,8 +152,10 @@
         // @ts-ignore
         delete $grid[[gx,gy]];
         // @ts-ignore
+        let prev = $msqgrid[[gx,gy]];
+        // @ts-ignore
         delete $msqgrid[[gx,gy]];
-        updateMaxSquareCounts(gx,gy);
+        updateMaxSquareCounts(gx,gy,prev);
         lastvalid = lastfree = [gx,gy];
     }
     function handleTouchstart(event) {
@@ -292,7 +294,7 @@
         gotoGridPos(lastvalid[0],lastvalid[1],true);
         // @ts-ignore
         $grid[lastvalid] = type;
-        updateMaxSquareCounts(lastvalid[0],lastvalid[1]);
+        updateMaxSquareCounts(lastvalid[0],lastvalid[1],0);
         update_piece_index();
         $pieces[piece_index] = {id:pid, type:type, gx:lastvalid[0], gy:lastvalid[1]};
 	}
