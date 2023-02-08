@@ -21,8 +21,9 @@ export const canvasheight = writable(0);
 export const activezoom = writable(false);
 export const nextid = writable(JSON.parse(localStorage.getItem('nextid')) || 0);
 nextid.subscribe((value) => localStorage.nextid = JSON.stringify(value));
-export const grid = writable(JSON.parse(localStorage.getItem('grid')) || {});
-grid.subscribe((value) => localStorage.grid = JSON.stringify(value));
+export const grid = writable({});
+//export const grid = writable(JSON.parse(localStorage.getItem('grid')) || {});
+//grid.subscribe((value) => localStorage.grid = JSON.stringify(value));
 export const pieces = writable(JSON.parse(localStorage.getItem('pieces')) || []);
 pieces.subscribe((value) => localStorage.pieces = JSON.stringify(value));
 

@@ -168,8 +168,6 @@
         $nextid++;
 		$pieces.push({id:pid, type:type, gx:nx, gy:ny});
 		$pieces=$pieces;
-        // @ts-ignore
-        $grid[[nx,ny]] = type;
 	}
 </script>
 
@@ -197,6 +195,7 @@
     }
     .image {
         width: 100%;
+        background-repeat: no-repeat;
     }
     .imagelabel {
         position: absolute;

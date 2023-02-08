@@ -49,6 +49,8 @@
 
     function initialize() {
         updatePos(1);
+        // @ts-ignore
+        $grid[[gx,gy]] = type;
         updateMaxSquareCounts(gx,gy);
     }
 
@@ -343,11 +345,12 @@
         style="width: {draw_w}px;
         height: {draw_h}px;
         background-image: url({geomimg});
+        background-repeat: no-repeat;
         left: {0}px;
         top: {offsety}px;
         transform: translate({$coords.x+$camerax}px,{$coords.y+$cameray}px);
         line-height: {draw_h}px;
-        {inmotion ? 'z-index: 3; cursor: move;' : 'z-index: 2; cursor: auto;'}
+        {inmotion ? 'z-index: 20; cursor: move;' : 'z-index: 2; cursor: auto;'}
         visibility: {drop_oob ? 'hidden' : 'visible'}">
         {sqsize<mintext ? '' : type}
     </div>
@@ -356,6 +359,7 @@
         style="width: {draw_w}px;
         height: {draw_h}px;
         background-image: url({geomimg});
+        background-repeat: no-repeat;
         left: {0}px;
         top: {offsety}px;
         z-index: 2;
